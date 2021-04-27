@@ -38,7 +38,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "CoB: CW",
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Call Of Butantan: Corona Warfare",
 										  nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
