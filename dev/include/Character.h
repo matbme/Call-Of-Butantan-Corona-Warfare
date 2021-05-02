@@ -15,6 +15,8 @@ class Character {
         float y_position  = 0;
 
     public: 
+		bool is_jumping = false;
+		int jump_ticks = 0;
 
 
         Character(Sprite* i_sprite, float x, float y);
@@ -33,6 +35,10 @@ class Character {
         void walk_right();
 
         void walk_left();
+
+		void jump();
+
+		void update_jump_pos();
 
 		bool checkWorldCollision(float worldBorder);
 };

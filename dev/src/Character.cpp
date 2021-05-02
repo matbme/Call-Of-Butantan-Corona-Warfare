@@ -1,5 +1,5 @@
 #include "Character.h" 
-
+#include <math.h>
 
 Character::Character(Sprite* i_sprite, float x, float y){
     this->sprite     = i_sprite;
@@ -30,6 +30,22 @@ void Character::walk_right(){
 
 void Character::walk_left(){
 	this->x_position -= 10.0f;
+    this->sprite->setPosition(glm::vec3(this->x_position, this->y_position, 0.0));
+}
+
+void Character::jump() {
+	this->is_jumping = true;
+}
+
+void Character::update_jump_pos() {
+	this->y_position += (-0.03*pow(this->jump_ticks, 2) + this->jump_ticks);
+
+	if (this->y_position <= 260.0 && this->jump_ticks != 0) {
+		this->y_position = 260.0;
+		this->is_jumping = false;
+		this->jump_ticks = 0;
+	}
+
     this->sprite->setPosition(glm::vec3(this->x_position, this->y_position, 0.0));
 }
  

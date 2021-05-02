@@ -98,6 +98,9 @@ void SceneManager::update()
 		if (!characters[1]->checkWorldCollision(width))
 			characters[1]->walk_left();
 
+	if (keys[GLFW_KEY_W])
+		characters[1]->jump();
+
 	if (keys[GLFW_KEY_SPACE]){
 		if(hold_space_times<5){
 			hold_space_times++;
@@ -130,6 +133,14 @@ void SceneManager::update()
 				objects[3]->setTexture(textID);
 			}
 
+		}
+	}
+
+	// Jump updating
+	for (Character *chr : characters) {
+		if (chr->is_jumping) {
+			chr->jump_ticks++;
+			chr->update_jump_pos();
 		}
 	}
 }
