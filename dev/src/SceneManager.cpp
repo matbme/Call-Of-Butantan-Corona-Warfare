@@ -220,10 +220,10 @@ void SceneManager::create_characters()
 	float char2_x = 600.0f;
 
 	sprite = new Sprite;
-	texID = loadTexture("textures/naruto.png");
+	texID = loadTexture("textures/mito-corpo.png");
 	sprite->setTexture(texID);
 	sprite->setPosition(glm::vec3(char1_x, 260.0, 0.0));
-	sprite->setDimension(glm::vec3(185.5f, 200.5f, 1.0f));
+	sprite->setDimension(glm::vec3(100.0f, 200.0f, 1.0f));
 	sprite->setShader(shader);
 	objects.push_back(sprite);
 
@@ -231,10 +231,10 @@ void SceneManager::create_characters()
 	characters.push_back(character);
 
 	sprite = new Sprite;
-	texID = loadTexture("textures/sasuke.png");
+	texID = loadTexture("textures/ze-gotinha-corpo.png");
 	sprite->setTexture(texID);
 	sprite->setPosition(glm::vec3(char2_x, 260.0, 0.0));
-	sprite->setDimension(glm::vec3(280.0f, 280.0f, 1.0f));
+	sprite->setDimension(glm::vec3(100.0f, 200.0f, 1.0f));
 	sprite->setShader(shader);
 	objects.push_back(sprite);
 
