@@ -90,7 +90,7 @@ void SceneManager::update()
 		if(hold_space_times<5){
 			hold_space_times++;
 		}else{
-						keys[GLFW_KEY_SPACE] = false;
+ 			keys[GLFW_KEY_SPACE] = false;
 
 			hold_space_times=0;
 
