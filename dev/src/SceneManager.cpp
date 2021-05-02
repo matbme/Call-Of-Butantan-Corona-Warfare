@@ -83,16 +83,20 @@ void SceneManager::update()
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
 	if (keys[GLFW_KEY_RIGHT])
-		characters[0]->walk_right();
+		if (!characters[0]->checkWorldCollision(width))
+			characters[0]->walk_right();
 
 	if (keys[GLFW_KEY_LEFT])
-		characters[0]->walk_left();
+		if (!characters[0]->checkWorldCollision(width))
+			characters[0]->walk_left();
 
 	if (keys[GLFW_KEY_D])
-		characters[1]->walk_right();
+		if (!characters[1]->checkWorldCollision(width))
+			characters[1]->walk_right();
 
 	if (keys[GLFW_KEY_A])
-		characters[1]->walk_left();
+		if (!characters[1]->checkWorldCollision(width))
+			characters[1]->walk_left();
 
 	if (keys[GLFW_KEY_SPACE]){
 		if(hold_space_times<5){

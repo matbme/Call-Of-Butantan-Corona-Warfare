@@ -34,4 +34,5 @@ class Character {
 
         void walk_left();
 
+		bool checkWorldCollision(float worldBorder);
 };

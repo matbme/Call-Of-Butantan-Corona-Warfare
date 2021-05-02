@@ -72,3 +72,16 @@ unsigned int Character::loadTexture(string filename)
 
 	return texture;
 }
+
+bool Character::checkWorldCollision(float worldBorder)
+{
+	if (this->x_position < 0) {
+		this->x_position = 0;
+		return true;
+	} else if (this->x_position > worldBorder) {
+		this->x_position = worldBorder;
+		return true;
+	}
+
+	return false;
+}
