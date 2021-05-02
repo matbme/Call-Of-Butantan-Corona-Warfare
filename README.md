@@ -2,8 +2,18 @@
 
 ## Compiling
 
-We must specify all `.cpp` files to be compiled, as well as some libs to go with it.
+A Makefile is supported, which automatically identifies all `.cpp` and `.c` files
+inside `/dev/src`. All you need to do in order to compile this masterpiece of 
+gaming is run:
 
 ```bash
-g++ src/Source.cpp src/glad.c src/SceneManager.cpp src/Sprite.cpp src/stb_image.cpp src/Character.cpp -g -o app -Iinclude -lglfw -ldl
+$ cd dev
+$ make
 ``` 
+
+You can also clean the generated binaries by running:
+
+```bash
+$ cd dev
+$ make clean
+```
