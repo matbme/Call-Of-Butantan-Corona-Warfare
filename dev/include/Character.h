@@ -1,4 +1,7 @@
 #include "Sprite.h" 
+#include <string>
+
+using namespace std;
 
 class Character {
 
@@ -15,6 +18,9 @@ class Character {
 
 
         Character(Sprite* i_sprite, float x, float y);
+
+	    unsigned int loadTexture(string filename); 
+
         
         void attack(Character enemy);
 

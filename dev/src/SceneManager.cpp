@@ -4,6 +4,8 @@ static bool keys[1024];
 static bool resized;
 static GLuint width, height;
 
+int hold_space_times = 0;
+
 SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
@@ -67,6 +69,8 @@ void SceneManager::resize(GLFWwindow *window, int w, int h)
 
 void SceneManager::update()
 {
+	unsigned int textID;
+
 	if (keys[GLFW_KEY_ESCAPE])
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
@@ -81,6 +85,37 @@ void SceneManager::update()
 
 	if (keys[GLFW_KEY_A])
 		characters[1]->walk_left();
+
+	if (keys[GLFW_KEY_SPACE]){
+		if(hold_space_times<5){
+			hold_space_times++;
+		}else{
+						keys[GLFW_KEY_SPACE] = false;
+
+			hold_space_times=0;
+
+			characters[0]->receive_damage(10);
+			int hp = characters[0]->getHP();
+
+			if(hp >= 10){
+				switch(hp){
+					case 90: textID = loadTexture("textures/hp/hp-09.png"); break;
+					case 80: textID = loadTexture("textures/hp/hp-08.png"); break;
+					case 70: textID = loadTexture("textures/hp/hp-07.png"); break;
+					case 60: textID = loadTexture("textures/hp/hp-06.png"); break;
+					case 50: textID = loadTexture("textures/hp/hp-05.png"); break;
+					case 40: textID = loadTexture("textures/hp/hp-04.png"); break;
+					case 30: textID = loadTexture("textures/hp/hp-03.png"); break;
+					case 20: textID = loadTexture("textures/hp/hp-02.png"); break;
+					case 10: textID = loadTexture("textures/hp/hp-01.png"); break;
+				}
+
+				objects[5]->setTexture(textID);
+			}
+
+ 
+		}
+	}
 }
 
 void SceneManager::render()
@@ -187,10 +222,10 @@ void SceneManager::create_hp_bar()
 	Sprite *sprite;
 
 	sprite = new Sprite;
-	texID = loadTexture("textures/mito.png");
+	texID = loadTexture("textures/hp/hp-10.png");
 	sprite->setTexture(texID);
-	sprite->setPosition(glm::vec3(900.0f, 1100.0f, 0.0));
-	sprite->setDimension(glm::vec3(150.0, 150.0f, 1.0f));
+	sprite->setPosition(glm::vec3(410.0f, 1050.0f, 0.0));
+	sprite->setDimension(glm::vec3(435.0, 72.5f, 1.0f));
 	sprite->setShader(shader);
 	objects.push_back(sprite);
 
@@ -201,6 +236,23 @@ void SceneManager::create_hp_bar()
 	sprite->setDimension(glm::vec3(150.0, 150.0f, 1.0f));
 	sprite->setShader(shader);
 	objects.push_back(sprite);
+
+	sprite = new Sprite;
+	texID = loadTexture("textures/hp/hp-10.png");
+	sprite->setTexture(texID);
+	sprite->setPosition(glm::vec3(1190.0f, 1050.0f, 0.0));
+	sprite->setDimension(glm::vec3(435.0, 72.5f, 1.0f));
+	sprite->setShader(shader);
+	objects.push_back(sprite);
+
+	sprite = new Sprite;
+	texID = loadTexture("textures/mito.png");
+	sprite->setTexture(texID);
+	sprite->setPosition(glm::vec3(900.0f, 1100.0f, 0.0));
+	sprite->setDimension(glm::vec3(150.0, 150.0f, 1.0f));
+	sprite->setShader(shader);
+	objects.push_back(sprite);
+
 }
 
 void SceneManager::setupCamera2D()
