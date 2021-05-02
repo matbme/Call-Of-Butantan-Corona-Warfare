@@ -38,7 +38,8 @@ void Character::jump() {
 }
 
 void Character::update_jump_pos() {
-	this->y_position += (-0.03*pow(this->jump_ticks, 2) + this->jump_ticks);
+
+	this->y_position += (-0.1*pow(this->jump_ticks, 2) + 2.7*this->jump_ticks);
 
 	if (this->y_position <= 260.0 && this->jump_ticks != 0) {
 		this->y_position = 260.0;
@@ -109,3 +110,4 @@ bool Character::checkWorldCollision(float worldBorder)
 
 	return false;
 }
+

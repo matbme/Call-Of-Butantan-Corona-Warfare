@@ -49,6 +49,7 @@ private:
 	void create_background();
 	void create_characters();
 	void create_hp_bar();
+	void create_win_object(string path);
 
 	GLFWwindow *window;
 

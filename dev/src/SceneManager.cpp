@@ -7,6 +7,9 @@ static GLuint width, height;
 
 static bool spaceKeyReleased = false;
 static bool enterKeyReleased = false;
+
+static bool gameOver = false;
+
 AudioManager* audio = new AudioManager;
 
 SceneManager::SceneManager() {}
@@ -97,82 +100,95 @@ void SceneManager::update()
 	if (keys[GLFW_KEY_ESCAPE])
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
-	if (keys[GLFW_KEY_RIGHT])
-		if (!characters[0]->checkWorldCollision(width))
-			characters[0]->walk_right();
+	if(!gameOver){
+		if (keys[GLFW_KEY_RIGHT])
+			if (!characters[0]->checkWorldCollision(width))
+				characters[0]->walk_right();
 
-	if (keys[GLFW_KEY_LEFT])
-		if (!characters[0]->checkWorldCollision(width))
-			characters[0]->walk_left();
+		if (keys[GLFW_KEY_LEFT])
+			if (!characters[0]->checkWorldCollision(width))
+				characters[0]->walk_left();
 
-	if (keys[GLFW_KEY_UP])
-		characters[0]->jump();
+		if (keys[GLFW_KEY_UP])
+			characters[0]->jump();
 
-	if (keys[GLFW_KEY_D])
-		if (!characters[1]->checkWorldCollision(width))
-			characters[1]->walk_right();
+		if (keys[GLFW_KEY_D])
+			if (!characters[1]->checkWorldCollision(width))
+				characters[1]->walk_right();
 
-	if (keys[GLFW_KEY_A])
-		if (!characters[1]->checkWorldCollision(width))
-			characters[1]->walk_left();
+		if (keys[GLFW_KEY_A])
+			if (!characters[1]->checkWorldCollision(width))
+				characters[1]->walk_left();
 
-	if (keys[GLFW_KEY_W])
-		characters[1]->jump();
+		if (keys[GLFW_KEY_W])
+			characters[1]->jump();
 
-	if (keys[GLFW_KEY_SPACE]){
-		if (!characters[1]->attack_locked()) {
-			float dist = getDistanceBetweenChars(characters[1], characters[0]);
+		if (keys[GLFW_KEY_SPACE]){
+			if (!characters[1]->attack_locked()) {
+				float dist = getDistanceBetweenChars(characters[1], characters[0]);
 
-			if (dist <= 70) {
-				characters[0]->receive_damage(10);
+				if (dist <= 135) {
+					characters[0]->receive_damage(10);
 
-				int hp = characters[0]->getHP();
+					int hp = characters[0]->getHP();
 
-				if(hp >= 10){
-					textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
-					objects[5]->setTexture(textID);
+					if(hp >= 10){
+						textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
+						objects[5]->setTexture(textID);
+					}
+
+					if(hp <= 0){
+						gameOver = true;
+						create_win_object("textures/ze-gotinha-wins.png");
+					}
 				}
-			}
 
+				characters[1]->toggle_attack_lock();
+			}
+		}
+
+		if (spaceKeyReleased) {
 			characters[1]->toggle_attack_lock();
+			spaceKeyReleased = false;
 		}
-	}
 
-	if (spaceKeyReleased) {
-		characters[1]->toggle_attack_lock();
-		spaceKeyReleased = false;
-	}
+		if (keys[GLFW_KEY_ENTER]) {
+			if (!characters[0]->attack_locked()) {
+				float dist = getDistanceBetweenChars(characters[1], characters[0]);
+				if (dist <= 135) {
+					characters[1]->receive_damage(10);
 
-	if (keys[GLFW_KEY_ENTER]) {
-		if (!characters[0]->attack_locked()) {
-			float dist = getDistanceBetweenChars(characters[1], characters[0]);
-			if (dist <= 70) {
-				characters[1]->receive_damage(10);
+					int hp = characters[1]->getHP();
 
-				int hp = characters[1]->getHP();
+					if (hp >= 10) {
+						textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
+						objects[3]->setTexture(textID);
+					}
 
-				if (hp >= 10) {
-					textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
-					objects[3]->setTexture(textID);
+					if(hp <= 0){
+						gameOver = true;
+						create_win_object("textures/mito-wins.png");
+					}
 				}
+
+				characters[0]->toggle_attack_lock();
 			}
+		}
 
+		if (enterKeyReleased) {
 			characters[0]->toggle_attack_lock();
+			enterKeyReleased = false;
+		}
+
+		// Jump updating
+		for (Character *chr : characters) {
+			if (chr->is_jumping) {
+				chr->jump_ticks++;
+				chr->update_jump_pos();
+			}
 		}
 	}
 
-	if (enterKeyReleased) {
-		characters[0]->toggle_attack_lock();
-		enterKeyReleased = false;
-	}
-
-	// Jump updating
-	for (Character *chr : characters) {
-		if (chr->is_jumping) {
-			chr->jump_ticks++;
-			chr->update_jump_pos();
-		}
-	}
 }
 
 void SceneManager::render()
@@ -230,7 +246,7 @@ void SceneManager::create_background()
 {
 
 	Sprite *sprite = new Sprite;
-	unsigned int texID = loadTexture("textures/background.jpg");
+	unsigned int texID = loadTexture("textures/background.png");
 
 	sprite->setTexture(texID);
 	sprite->setPosition(glm::vec3(800.0f, 600.0f, 0.0));
@@ -253,7 +269,7 @@ void SceneManager::create_characters()
 	texID = loadTexture("textures/mito-corpo.png");
 	sprite->setTexture(texID);
 	sprite->setPosition(glm::vec3(char1_x, 260.0, 0.0));
-	sprite->setDimension(glm::vec3(100.0f, 200.0f, 1.0f));
+	sprite->setDimension(glm::vec3(150.0f, 350.0f, 1.0f));
 	sprite->setShader(shader);
 	objects.push_back(sprite);
 
@@ -264,7 +280,7 @@ void SceneManager::create_characters()
 	texID = loadTexture("textures/ze-gotinha-corpo.png");
 	sprite->setTexture(texID);
 	sprite->setPosition(glm::vec3(char2_x, 260.0, 0.0));
-	sprite->setDimension(glm::vec3(100.0f, 200.0f, 1.0f));
+	sprite->setDimension(glm::vec3(150.0f, 350.0f, 1.0f));
 	sprite->setShader(shader);
 	objects.push_back(sprite);
 
@@ -310,6 +326,17 @@ void SceneManager::create_hp_bar()
 	sprite->setShader(shader);
 	objects.push_back(sprite);
 
+}
+
+void SceneManager::create_win_object(string path){
+	Sprite *sprite = new Sprite;
+	unsigned int texID = loadTexture(path);
+
+	sprite->setTexture(texID);
+	sprite->setPosition(glm::vec3(800.0f, 600.0f, 0.0));
+	sprite->setDimension(glm::vec3(1600.0f, 1200.0f, 1.0f));
+	sprite->setShader(shader);
+	objects.push_back(sprite);
 }
 
 void SceneManager::setupCamera2D()
