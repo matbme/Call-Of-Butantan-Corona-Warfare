@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "AudioManager.h"
 
 static bool keys[1024];
 static bool resized;
@@ -6,6 +7,7 @@ static GLuint width, height;
 
 static bool spaceKeyReleased = false;
 static bool enterKeyReleased = false;
+AudioManager* audio = new AudioManager;
 
 SceneManager::SceneManager() {}
 
@@ -17,6 +19,11 @@ void SceneManager::initialize(GLuint w, GLuint h)
 	height = h;
 
 	initializeGraphics();
+
+	audio->init();
+
+	audio->play_audio("audio/hino-br-2.mp3");
+
 }
 
 void SceneManager::initializeGraphics()
