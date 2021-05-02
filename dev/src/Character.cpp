@@ -48,6 +48,14 @@ void Character::update_jump_pos() {
 
     this->sprite->setPosition(glm::vec3(this->x_position, this->y_position, 0.0));
 }
+
+void Character::toggle_attack_lock() {
+	this->attack_lock = !this->attack_lock;
+}
+
+bool Character::attack_locked() {
+	return this->attack_lock;
+}
  
 unsigned int Character::loadTexture(string filename)
 {

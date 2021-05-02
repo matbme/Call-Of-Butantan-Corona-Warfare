@@ -11,6 +11,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -41,6 +42,7 @@ public:
 	void setupScene(); //antigo setupGeometry
 	void setupCamera2D();
 	unsigned int loadTexture(string filename); 
+	float getDistanceBetweenChars(Character *chr1, Character *chr2);
 
 private:
 	
@@ -58,6 +60,5 @@ private:
 	//Nossos objetos (sprites) da cena
 	vector <Sprite*> objects;
 	vector <Character*> characters;
-
 };
 

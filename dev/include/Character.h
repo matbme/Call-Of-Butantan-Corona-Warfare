@@ -6,18 +6,17 @@ using namespace std;
 class Character {
 
     private:
-
-        Sprite* sprite;
-
         int hp            = 100;
         int attack_damage = 10;
-        float x_position  = 0;
-        float y_position  = 0;
+		bool attack_lock  = false;
 
     public: 
 		bool is_jumping = false;
 		int jump_ticks = 0;
 
+        Sprite* sprite;
+        float x_position  = 0;
+        float y_position  = 0;
 
         Character(Sprite* i_sprite, float x, float y);
 
@@ -41,4 +40,8 @@ class Character {
 		void update_jump_pos();
 
 		bool checkWorldCollision(float worldBorder);
+
+		void toggle_attack_lock();
+
+		bool attack_locked();
 };

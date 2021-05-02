@@ -25,6 +25,8 @@ public:
 	void setDimension(glm::vec3 scale) { this->scale = scale; }
 	void setAngle(float angle) { this->angle = angle; } //para 3D precisa angulo por eixo ou quaternion
 	
+	// Retorna o tamanho do sprite
+	glm::vec3 getScale() { return this->scale; }
 
 	//Para controle direto da matriz de transformações
 	void setRotation(float angle, glm::vec3 axis, bool reset = true);

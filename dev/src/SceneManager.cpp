@@ -4,7 +4,8 @@ static bool keys[1024];
 static bool resized;
 static GLuint width, height;
 
-int hold_space_times = 0;
+static bool spaceKeyReleased = false;
+static bool enterKeyReleased = false;
 
 SceneManager::SceneManager() {}
 
@@ -61,8 +62,15 @@ void SceneManager::key_callback(GLFWwindow *window, int key, int scancode, int a
 	{
 		if (action == GLFW_PRESS)
 			keys[key] = true;
-		else if (action == GLFW_RELEASE)
+		else if (action == GLFW_RELEASE) {
+			if (key == GLFW_KEY_SPACE)
+				spaceKeyReleased = true;
+
+			if (key == GLFW_KEY_ENTER)
+				enterKeyReleased = true;
+
 			keys[key] = false;
+		}
 	}
 }
 
@@ -90,6 +98,9 @@ void SceneManager::update()
 		if (!characters[0]->checkWorldCollision(width))
 			characters[0]->walk_left();
 
+	if (keys[GLFW_KEY_UP])
+		characters[0]->jump();
+
 	if (keys[GLFW_KEY_D])
 		if (!characters[1]->checkWorldCollision(width))
 			characters[1]->walk_right();
@@ -102,38 +113,50 @@ void SceneManager::update()
 		characters[1]->jump();
 
 	if (keys[GLFW_KEY_SPACE]){
-		if(hold_space_times<5){
-			hold_space_times++;
-		}else{
- 			keys[GLFW_KEY_SPACE] = false;
+		if (!characters[1]->attack_locked()) {
+			float dist = getDistanceBetweenChars(characters[1], characters[0]);
 
-			hold_space_times=0;
+			if (dist <= 70) {
+				characters[0]->receive_damage(10);
 
-			characters[0]->receive_damage(10);
-			int hp = characters[0]->getHP();
+				int hp = characters[0]->getHP();
 
-			if(hp >= 10){
-				textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
-				objects[5]->setTexture(textID);
+				if(hp >= 10){
+					textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
+					objects[5]->setTexture(textID);
+				}
 			}
+
+			characters[1]->toggle_attack_lock();
 		}
 	}
 
+	if (spaceKeyReleased) {
+		characters[1]->toggle_attack_lock();
+		spaceKeyReleased = false;
+	}
+
 	if (keys[GLFW_KEY_ENTER]) {
-		if (hold_space_times < 5) hold_space_times++;
-		else {
-			keys[GLFW_KEY_RIGHT_CONTROL] = false;
-			hold_space_times = 0;
+		if (!characters[0]->attack_locked()) {
+			float dist = getDistanceBetweenChars(characters[1], characters[0]);
+			if (dist <= 70) {
+				characters[1]->receive_damage(10);
 
-			characters[1]->receive_damage(10);
-			int hp = characters[1]->getHP();
+				int hp = characters[1]->getHP();
 
-			if (hp >= 10) {
-				textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
-				objects[3]->setTexture(textID);
+				if (hp >= 10) {
+					textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
+					objects[3]->setTexture(textID);
+				}
 			}
 
+			characters[0]->toggle_attack_lock();
 		}
+	}
+
+	if (enterKeyReleased) {
+		characters[0]->toggle_attack_lock();
+		enterKeyReleased = false;
 	}
 
 	// Jump updating
@@ -330,4 +353,21 @@ unsigned int SceneManager::loadTexture(string filename)
 	glActiveTexture(GL_TEXTURE0);
 
 	return texture;
+}
+
+float SceneManager::getDistanceBetweenChars(Character *chr1, Character *chr2) {
+	float charsCenterX[2] = {
+		chr1->x_position + (chr1->sprite->getScale().x / 2),
+		chr2->x_position + (chr2->sprite->getScale().x / 2)
+	};
+
+	float charsCenterY[2] = {
+		chr1->y_position + (chr1->sprite->getScale().y / 2),
+		chr2->y_position + (chr2->sprite->getScale().y / 2)
+	};
+
+	float distX = charsCenterX[1] - charsCenterX[0];
+	float distY = charsCenterY[1] - charsCenterY[0];
+
+	return sqrt(pow(distX, 2) + pow(distY, 2));
 }
