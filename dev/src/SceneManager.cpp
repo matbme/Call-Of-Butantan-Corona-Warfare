@@ -110,22 +110,26 @@ void SceneManager::update()
 			int hp = characters[0]->getHP();
 
 			if(hp >= 10){
-				switch(hp){
-					case 90: textID = loadTexture("textures/hp/hp-09.png"); break;
-					case 80: textID = loadTexture("textures/hp/hp-08.png"); break;
-					case 70: textID = loadTexture("textures/hp/hp-07.png"); break;
-					case 60: textID = loadTexture("textures/hp/hp-06.png"); break;
-					case 50: textID = loadTexture("textures/hp/hp-05.png"); break;
-					case 40: textID = loadTexture("textures/hp/hp-04.png"); break;
-					case 30: textID = loadTexture("textures/hp/hp-03.png"); break;
-					case 20: textID = loadTexture("textures/hp/hp-02.png"); break;
-					case 10: textID = loadTexture("textures/hp/hp-01.png"); break;
-				}
-
+				textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
 				objects[5]->setTexture(textID);
 			}
+		}
+	}
 
- 
+	if (keys[GLFW_KEY_ENTER]) {
+		if (hold_space_times < 5) hold_space_times++;
+		else {
+			keys[GLFW_KEY_RIGHT_CONTROL] = false;
+			hold_space_times = 0;
+
+			characters[1]->receive_damage(10);
+			int hp = characters[1]->getHP();
+
+			if (hp >= 10) {
+				textID = loadTexture("textures/hp/hp-0" + std::to_string(hp/10) + ".png");
+				objects[3]->setTexture(textID);
+			}
+
 		}
 	}
 }
