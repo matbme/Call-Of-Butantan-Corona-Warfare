@@ -1,6 +1,20 @@
+ifeq ($(OS),Windows_NT)
+    detected_OS := Windows
+else
+    detected_OS := $(shell uname)
+endif
+
 CC		= g++
 CFLAGS	= -g -Iinclude
-LIBS	= -lglfw -ldl -lSDL2main -lSDL2 -lSDL2_mixer
+LIBS	= -lglfw -ldl
+
+ifeq ($(detected_OS),Darwin)
+	CFLAGS	+= -F/Library/Frameworks
+	LIBS	+= -framework SDL2 -I/Library/Frameworks/SDL2.framework/Headers -framework SDL2_mixer -I/Library/Frameworks/SDL2_mixer.framework/Headers
+endif
+ifeq ($(detected_OS),Linux)
+	LIBS	+= -lSDL2main -lSDL2 -lSDL2_mixer
+endif
 
 ODIR	= src/obj
 SDIR	= src
