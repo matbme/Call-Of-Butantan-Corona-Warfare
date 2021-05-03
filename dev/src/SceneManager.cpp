@@ -128,6 +128,7 @@ void SceneManager::update()
 				float dist = getDistanceBetweenChars(characters[1], characters[0]);
 
 				if (dist <= 135) {
+					audio->play_audio("audio/ta-ok.mp3");
 					characters[0]->receive_damage(10);
 
 					int hp = characters[0]->getHP();
@@ -139,6 +140,7 @@ void SceneManager::update()
 
 					if(hp <= 0){
 						gameOver = true;
+						audio->play_audio("audio/voce-e-um-escroto.mp3");
 						create_win_object("textures/ze-gotinha-wins.png");
 					}
 				}
@@ -156,6 +158,7 @@ void SceneManager::update()
 			if (!characters[0]->attack_locked()) {
 				float dist = getDistanceBetweenChars(characters[1], characters[0]);
 				if (dist <= 135) {
+					audio->play_audio("audio/da-que-eu-te-dou-outra.mp3");
 					characters[1]->receive_damage(10);
 
 					int hp = characters[1]->getHP();
@@ -167,6 +170,7 @@ void SceneManager::update()
 
 					if(hp <= 0){
 						gameOver = true;
+						audio->play_audio("audio/to-me-lixando.mp3");
 						create_win_object("textures/mito-wins.png");
 					}
 				}
